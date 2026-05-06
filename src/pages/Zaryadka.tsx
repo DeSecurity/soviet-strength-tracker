@@ -1,19 +1,7 @@
 import { useState, useMemo } from "react";
-import { useStore, todayStr, uid } from "@/lib/store";
+import { useStore, todayStr, uid, DEFAULT_ZARYADKA_EXERCISES } from "@/lib/store";
 import { toast } from "sonner";
-import { Check, Sunrise } from "lucide-react";
-
-const ROUTINE = [
-  "Neck rotations",
-  "Shoulder circles",
-  "Arm swings",
-  "Torso twists",
-  "Hip circles",
-  "Squats",
-  "Push-ups",
-  "Light jogging in place",
-  "Deep breathing",
-];
+import { Check, Sunrise, Plus, X } from "lucide-react";
 
 export default function Zaryadka() {
   const [store, set] = useStore();
