@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { saveStore, loadStore } from "@/lib/store";
+import { saveStore, loadStore, DEFAULT_ZARYADKA_EXERCISES } from "@/lib/store";
 import { toast } from "sonner";
 
 export default function Settings() {
@@ -33,7 +33,7 @@ export default function Settings() {
 
   const reset = () => {
     if (!confirm("Erase all locally stored training data? This cannot be undone.")) return;
-    saveStore({ diet: [], water: [], pushups: [], maxTests: [], zaryadka: [] });
+    saveStore({ diet: [], water: [], pushups: [], maxTests: [], zaryadka: [], zaryadkaExercises: DEFAULT_ZARYADKA_EXERCISES });
     toast.success("Data cleared");
   };
 

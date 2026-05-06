@@ -1,19 +1,7 @@
 import { useState, useMemo } from "react";
-import { useStore, todayStr, uid } from "@/lib/store";
+import { useStore, todayStr, uid, DEFAULT_ZARYADKA_EXERCISES } from "@/lib/store";
 import { toast } from "sonner";
-import { Check, Sunrise } from "lucide-react";
-
-const ROUTINE = [
-  "Neck rotations",
-  "Shoulder circles",
-  "Arm swings",
-  "Torso twists",
-  "Hip circles",
-  "Squats",
-  "Push-ups",
-  "Light jogging in place",
-  "Deep breathing",
-];
+import { Check, Sunrise, Plus, X } from "lucide-react";
 
 export default function Zaryadka() {
   const [store, set] = useStore();
@@ -25,9 +13,32 @@ export default function Zaryadka() {
   const [eb, setEb] = useState(existing?.energyBefore ?? 5);
   const [ea, setEa] = useState(existing?.energyAfter ?? 7);
   const [notes, setNotes] = useState(existing?.notes ?? "");
+  const [newExercise, setNewExercise] = useState("");
+
+  const routine = store.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES;
 
   const toggle = (m: string) =>
     setMovements((prev) => (prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]));
+
+  const addExercise = () => {
+    const name = newExercise.trim();
+    if (!name) return;
+    if (routine.includes(name)) {
+      toast.error("Already in routine");
+      return;
+    }
+    set((s) => ({ ...s, zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), name] }));
+    setNewExercise("");
+    toast.success("Exercise added");
+  };
+
+  const removeExercise = (m: string) => {
+    set((s) => ({
+      ...s,
+      zaryadkaExercises: (s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES).filter((x) => x !== m),
+    }));
+    setMovements((prev) => prev.filter((x) => x !== m));
+  };
 
   const completionRate = useMemo(() => {
     const total = store.zaryadka.length;
@@ -73,17 +84,34 @@ export default function Zaryadka() {
       <div className="bg-card border border-border rounded-lg p-4 mb-4">
         <div className="text-sm font-semibold uppercase tracking-wider mb-3">Routine</div>
         <div className="space-y-1.5">
-          {ROUTINE.map((m) => {
+          {routine.map((m) => {
             const done = movements.includes(m);
             return (
-              <button key={m} onClick={() => toggle(m)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded border text-sm text-left transition-colors ${done ? "bg-primary/10 border-primary text-foreground" : "border-border hover:border-primary/50"}`}>
-                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${done ? "bg-primary border-primary" : "border-input"}`}>
-                  {done && <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />}
-                </div>
-                <span className={done ? "font-semibold" : ""}>{m}</span>
-              </button>
+              <div key={m} className={`flex items-center gap-2 rounded border transition-colors ${done ? "bg-primary/10 border-primary" : "border-border"}`}>
+                <button onClick={() => toggle(m)} className="flex-1 flex items-center gap-3 px-3 py-2.5 text-sm text-left">
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${done ? "bg-primary border-primary" : "border-input"}`}>
+                    {done && <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />}
+                  </div>
+                  <span className={done ? "font-semibold" : ""}>{m}</span>
+                </button>
+                <button onClick={() => removeExercise(m)} aria-label={`Remove ${m}`} className="px-3 py-2.5 text-muted-foreground hover:text-destructive">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             );
           })}
+        </div>
+        <div className="flex gap-2 mt-3">
+          <input
+            value={newExercise}
+            onChange={(e) => setNewExercise(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addExercise(); } }}
+            placeholder="Add exercise"
+            className="flex-1 px-3 py-2 border border-input rounded text-sm bg-background"
+          />
+          <button onClick={addExercise} className="px-3 py-2 bg-primary text-primary-foreground rounded text-sm font-semibold uppercase tracking-wider flex items-center gap-1">
+            <Plus className="h-4 w-4" /> Add
+          </button>
         </div>
       </div>
 

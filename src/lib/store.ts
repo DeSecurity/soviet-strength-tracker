@@ -43,9 +43,29 @@ export type Store = {
   pushups: PushupSet[];
   maxTests: MaxTest[];
   zaryadka: ZaryadkaSession[];
+  zaryadkaExercises: string[];
 };
 
-const empty: Store = { diet: [], water: [], pushups: [], maxTests: [], zaryadka: [] };
+export const DEFAULT_ZARYADKA_EXERCISES = [
+  "Neck rotations",
+  "Shoulder circles",
+  "Arm swings",
+  "Torso twists",
+  "Hip circles",
+  "Squats",
+  "Push-ups",
+  "Light jogging in place",
+  "Deep breathing",
+];
+
+const empty: Store = {
+  diet: [],
+  water: [],
+  pushups: [],
+  maxTests: [],
+  zaryadka: [],
+  zaryadkaExercises: DEFAULT_ZARYADKA_EXERCISES,
+};
 
 export function loadStore(): Store {
   if (typeof window === "undefined") return empty;
