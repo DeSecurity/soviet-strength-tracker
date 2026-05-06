@@ -79,6 +79,16 @@ export default function Zaryadka() {
     }));
   };
 
+  const updateMax = (name: string, maxReps: number) => {
+    const v = Math.max(0, maxReps | 0);
+    set((s) => ({
+      ...s,
+      zaryadkaExercises: (s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES).map((x) =>
+        x.name === name ? { ...x, maxReps: v } : x,
+      ),
+    }));
+  };
+
   const save = (markComplete: boolean) => {
     if (markComplete && totalDone < totalTarget) {
       const remaining = totalTarget - totalDone;
