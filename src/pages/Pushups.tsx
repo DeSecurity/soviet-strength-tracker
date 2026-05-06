@@ -111,27 +111,31 @@ export default function Pushups() {
 
       <div className="bg-secondary text-secondary-foreground rounded-lg p-4 mb-4">
         <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider mb-3">
-          <Calculator className="h-4 w-4 text-primary" /> GTG Calculator
+          <Target className="h-4 w-4 text-primary" /> Current Max
         </div>
-        <div className="flex gap-2 mb-3">
-          <input type="number" placeholder="Your max" value={maxInput} onChange={(e) => setMaxInput(e.target.value)} className="flex-1 px-3 py-2 border border-white/20 bg-black/20 rounded text-sm" />
-          <button onClick={logMax} className="px-4 py-2 bg-primary text-primary-foreground rounded text-xs font-semibold uppercase tracking-wider">Log Max</button>
+        <div className="flex items-center gap-3 mb-3">
+          <div className="flex-1">
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80">Saved max</div>
+            <div className="text-3xl font-bold text-primary">{currentMax || "—"}</div>
+          </div>
+          <input type="number" placeholder="New max" value={maxInput} onChange={(e) => setMaxInput(e.target.value)} className="w-28 px-3 py-2 border border-white/20 bg-black/20 rounded text-sm" />
+          <button onClick={setMax} className="px-4 py-2 bg-primary text-primary-foreground rounded text-xs font-semibold uppercase tracking-wider">Set Max</button>
         </div>
-        {(maxReps > 0 || maxInput) && (
+        {currentMax > 0 && (
           <div className="grid grid-cols-3 gap-2 text-center">
-            {[0.4, 0.5, 0.6].map((p) => {
-              const m = maxReps || +maxInput || 0;
-              return (
-                <div key={p} className="bg-black/20 rounded p-2">
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80">{p * 100}%</div>
-                  <div className="text-lg font-bold text-primary">{Math.round(m * p)}</div>
-                  <div className="text-[10px] text-muted-foreground/80">reps/set</div>
-                </div>
-              );
-            })}
+            <div className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground/80 col-span-3 mb-1">
+              <Calculator className="h-3 w-3" /> GTG zones
+            </div>
+            {[0.4, 0.5, 0.6].map((p) => (
+              <div key={p} className="bg-black/20 rounded p-2">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80">{p * 100}%</div>
+                <div className="text-lg font-bold text-primary">{Math.round(currentMax * p)}</div>
+                <div className="text-[10px] text-muted-foreground/80">reps/set</div>
+              </div>
+            ))}
           </div>
         )}
-        <p className="text-[10px] text-muted-foreground/70 mt-3">Avoid max testing more than once every 2–4 weeks.</p>
+        <p className="text-[10px] text-muted-foreground/70 mt-3">Set your current max so the effort slider auto-suggests reps. Re-test every 2–4 weeks.</p>
       </div>
 
       <div className="bg-card border border-border rounded-lg p-4 mb-4 grid grid-cols-2 gap-4 text-center">
