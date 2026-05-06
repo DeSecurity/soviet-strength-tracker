@@ -26,7 +26,12 @@ export type PushupSet = {
 
 export type MaxTest = { id: string; date: string; reps: number };
 
-export type ZaryadkaExercise = { name: string; targetSets: number };
+export type ZaryadkaExercise = {
+  name: string;
+  targetSets: number;
+  /** Personal max reps for this exercise. Routine reps = round(maxReps * 0.5). 0 = unset. */
+  maxReps: number;
+};
 
 export type ZaryadkaSession = {
   id: string;
@@ -52,15 +57,15 @@ export type Store = {
 };
 
 export const DEFAULT_ZARYADKA_EXERCISES: ZaryadkaExercise[] = [
-  { name: "Neck rotations", targetSets: 1 },
-  { name: "Shoulder circles", targetSets: 1 },
-  { name: "Arm swings", targetSets: 2 },
-  { name: "Torso twists", targetSets: 2 },
-  { name: "Hip circles", targetSets: 2 },
-  { name: "Squats", targetSets: 3 },
-  { name: "Push-ups", targetSets: 3 },
-  { name: "Light jogging in place", targetSets: 1 },
-  { name: "Deep breathing", targetSets: 1 },
+  { name: "Neck rotations", targetSets: 1, maxReps: 20 },
+  { name: "Shoulder circles", targetSets: 1, maxReps: 20 },
+  { name: "Arm swings", targetSets: 2, maxReps: 30 },
+  { name: "Torso twists", targetSets: 2, maxReps: 30 },
+  { name: "Hip circles", targetSets: 2, maxReps: 20 },
+  { name: "Squats", targetSets: 3, maxReps: 0 },
+  { name: "Push-ups", targetSets: 3, maxReps: 0 },
+  { name: "Light jogging in place", targetSets: 1, maxReps: 0 },
+  { name: "Deep breathing", targetSets: 1, maxReps: 10 },
 ];
 
 const empty: Store = {
