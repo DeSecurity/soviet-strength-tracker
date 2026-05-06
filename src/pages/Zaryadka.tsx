@@ -51,7 +51,7 @@ export default function Zaryadka() {
     const target = Math.max(1, newTarget);
     set((s) => ({
       ...s,
-      zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), { name, targetSets: target }],
+      zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), { name, targetSets: target, maxReps: 0 }],
     }));
     setNewExercise("");
     setNewTarget(1);
@@ -75,6 +75,16 @@ export default function Zaryadka() {
       ...s,
       zaryadkaExercises: (s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES).map((x) =>
         x.name === name ? { ...x, targetSets: v } : x,
+      ),
+    }));
+  };
+
+  const updateMax = (name: string, maxReps: number) => {
+    const v = Math.max(0, maxReps | 0);
+    set((s) => ({
+      ...s,
+      zaryadkaExercises: (s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES).map((x) =>
+        x.name === name ? { ...x, maxReps: v } : x,
       ),
     }));
   };
@@ -157,17 +167,34 @@ export default function Zaryadka() {
                         ))}
                       </div>
                       <span className="text-[11px] text-muted-foreground font-mono">{done}/{r.targetSets} sets</span>
-                      <label className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                        Target
-                        <input
-                          type="number"
-                          min={1}
-                          value={r.targetSets}
-                          onChange={(e) => updateTarget(r.name, +e.target.value)}
-                          className="w-12 px-1 py-0.5 border border-input rounded text-xs bg-background"
-                        />
-                      </label>
+                      <div className="ml-auto flex items-center gap-2">
+                        <label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                          Sets
+                          <input
+                            type="number"
+                            min={1}
+                            value={r.targetSets}
+                            onChange={(e) => updateTarget(r.name, +e.target.value)}
+                            className="w-12 px-1 py-0.5 border border-input rounded text-xs bg-background"
+                          />
+                        </label>
+                        <label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                          Max
+                          <input
+                            type="number"
+                            min={0}
+                            value={r.maxReps}
+                            onChange={(e) => updateMax(r.name, +e.target.value)}
+                            className="w-14 px-1 py-0.5 border border-input rounded text-xs bg-background"
+                          />
+                        </label>
+                      </div>
                     </div>
+                    {r.maxReps > 0 ? (
+                      <div className="text-[11px] text-primary mt-1 font-mono">→ {Math.max(1, Math.round(r.maxReps * 0.5))} reps/set (50% of {r.maxReps})</div>
+                    ) : (
+                      <div className="text-[11px] text-muted-foreground/70 mt-1">Set max reps to get a target per set.</div>
+                    )}
                   </div>
                   <div className="flex items-center gap-1">
                     <button onClick={() => dec(r.name)} aria-label="Remove set" className="w-8 h-8 grid place-items-center rounded border border-input hover:border-primary/50 disabled:opacity-30" disabled={done <= 0}>
