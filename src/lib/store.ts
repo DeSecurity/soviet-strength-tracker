@@ -84,11 +84,20 @@ export function loadStore(): Store {
     if (!raw) return empty;
     const parsed = JSON.parse(raw);
     const merged: Store = { ...empty, ...parsed };
-    // Migrate legacy string[] exercises → {name,targetSets}[]
-    if (Array.isArray(merged.zaryadkaExercises) && merged.zaryadkaExercises.length > 0 && typeof (merged.zaryadkaExercises[0] as unknown) === "string") {
-      merged.zaryadkaExercises = (merged.zaryadkaExercises as unknown as string[]).map((name) => {
-        const def = DEFAULT_ZARYADKA_EXERCISES.find((d) => d.name === name);
-        return { name, targetSets: def?.targetSets ?? 1 };
+    // Migrate legacy formats: string[] or {name,targetSets}[] → ZaryadkaExercise[]
+    if (Array.isArray(merged.zaryadkaExercises)) {
+      merged.zaryadkaExercises = (merged.zaryadkaExercises as unknown[]).map((item) => {
+        if (typeof item === "string") {
+          const def = DEFAULT_ZARYADKA_EXERCISES.find((d) => d.name === item);
+          return { name: item, targetSets: def?.targetSets ?? 1, maxReps: def?.maxReps ?? 0 };
+        }
+        const it = item as Partial<ZaryadkaExercise>;
+        const def = DEFAULT_ZARYADKA_EXERCISES.find((d) => d.name === it.name);
+        return {
+          name: it.name ?? "",
+          targetSets: it.targetSets ?? def?.targetSets ?? 1,
+          maxReps: it.maxReps ?? def?.maxReps ?? 0,
+        };
       });
     }
     return merged;
