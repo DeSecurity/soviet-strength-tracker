@@ -90,16 +90,27 @@ export function loadStore(): Store {
       merged.zaryadkaExercises = (merged.zaryadkaExercises as unknown[]).map((item) => {
         if (typeof item === "string") {
           const def = DEFAULT_ZARYADKA_EXERCISES.find((d) => d.name === item);
-          return { name: item, targetSets: def?.targetSets ?? 1, maxReps: def?.maxReps ?? 0 };
+          return { name: item, targetSets: def?.targetSets ?? 3, maxReps: def?.maxReps ?? 0 };
         }
         const it = item as Partial<ZaryadkaExercise>;
         const def = DEFAULT_ZARYADKA_EXERCISES.find((d) => d.name === it.name);
         return {
           name: it.name ?? "",
-          targetSets: it.targetSets ?? def?.targetSets ?? 1,
+          targetSets: it.targetSets ?? def?.targetSets ?? 3,
           maxReps: it.maxReps ?? def?.maxReps ?? 0,
         };
       });
+    }
+    // One-time migration: normalize all routine sets to 3
+    try {
+      const ran = JSON.parse(localStorage.getItem(MIGRATION_KEY) || "[]") as string[];
+      if (!ran.includes("zaryadka-sets-3")) {
+        merged.zaryadkaExercises = merged.zaryadkaExercises.map((x) => ({ ...x, targetSets: 3 }));
+        localStorage.setItem(MIGRATION_KEY, JSON.stringify([...ran, "zaryadka-sets-3"]));
+        localStorage.setItem(KEY, JSON.stringify(merged));
+      }
+    } catch {
+      // ignore migration errors
     }
     return merged;
   } catch {
