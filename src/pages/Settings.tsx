@@ -33,7 +33,7 @@ export default function Settings() {
 
   const reset = () => {
     if (!confirm("Erase all locally stored training data? This cannot be undone.")) return;
-    saveStore({ diet: [], water: [], pushups: [], maxTests: [], zaryadka: [] });
+    saveStore({ diet: [], water: [], pushups: [], maxTests: [], zaryadka: [], zaryadkaExercises: DEFAULT_ZARYADKA_EXERCISES });
     toast.success("Data cleared");
   };
 
