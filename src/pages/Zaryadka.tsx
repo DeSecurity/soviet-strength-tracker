@@ -205,6 +205,7 @@ export default function Zaryadka() {
                     </button>
                     <button onClick={() => removeExercise(r.name)} aria-label={`Delete ${r.name}`} className="w-8 h-8 grid place-items-center text-muted-foreground hover:text-destructive">
                       <X className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               </div>
