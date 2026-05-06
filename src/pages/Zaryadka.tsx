@@ -13,9 +13,32 @@ export default function Zaryadka() {
   const [eb, setEb] = useState(existing?.energyBefore ?? 5);
   const [ea, setEa] = useState(existing?.energyAfter ?? 7);
   const [notes, setNotes] = useState(existing?.notes ?? "");
+  const [newExercise, setNewExercise] = useState("");
+
+  const routine = store.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES;
 
   const toggle = (m: string) =>
     setMovements((prev) => (prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]));
+
+  const addExercise = () => {
+    const name = newExercise.trim();
+    if (!name) return;
+    if (routine.includes(name)) {
+      toast.error("Already in routine");
+      return;
+    }
+    set((s) => ({ ...s, zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), name] }));
+    setNewExercise("");
+    toast.success("Exercise added");
+  };
+
+  const removeExercise = (m: string) => {
+    set((s) => ({
+      ...s,
+      zaryadkaExercises: (s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES).filter((x) => x !== m),
+    }));
+    setMovements((prev) => prev.filter((x) => x !== m));
+  };
 
   const completionRate = useMemo(() => {
     const total = store.zaryadka.length;
