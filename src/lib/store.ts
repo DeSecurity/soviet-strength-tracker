@@ -57,15 +57,15 @@ export type Store = {
 };
 
 export const DEFAULT_ZARYADKA_EXERCISES: ZaryadkaExercise[] = [
-  { name: "Neck rotations", targetSets: 1, maxReps: 20 },
-  { name: "Shoulder circles", targetSets: 1, maxReps: 20 },
-  { name: "Arm swings", targetSets: 2, maxReps: 30 },
-  { name: "Torso twists", targetSets: 2, maxReps: 30 },
-  { name: "Hip circles", targetSets: 2, maxReps: 20 },
+  { name: "Neck rotations", targetSets: 3, maxReps: 20 },
+  { name: "Shoulder circles", targetSets: 3, maxReps: 20 },
+  { name: "Arm swings", targetSets: 3, maxReps: 30 },
+  { name: "Torso twists", targetSets: 3, maxReps: 30 },
+  { name: "Hip circles", targetSets: 3, maxReps: 20 },
   { name: "Squats", targetSets: 3, maxReps: 0 },
   { name: "Push-ups", targetSets: 3, maxReps: 0 },
-  { name: "Light jogging in place", targetSets: 1, maxReps: 0 },
-  { name: "Deep breathing", targetSets: 1, maxReps: 10 },
+  { name: "Light jogging in place", targetSets: 3, maxReps: 0 },
+  { name: "Deep breathing", targetSets: 3, maxReps: 10 },
 ];
 
 const empty: Store = {
