@@ -1,16 +1,33 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useStore, todayStr, uid } from "@/lib/store";
 import { toast } from "sonner";
-import { Trash2, Plus, Calculator, AlertTriangle } from "lucide-react";
+import { Trash2, Plus, Calculator, AlertTriangle, Target } from "lucide-react";
+
+// Effort 1..10 → 30%..80% of current max
+const effortToPct = (e: number) => 0.3 + ((e - 1) / 9) * 0.5;
 
 export default function Pushups() {
   const [store, set] = useStore();
   const t = todayStr();
-  const [reps, setReps] = useState(10);
+
+  const currentMax = useMemo(() => {
+    if (!store.maxTests.length) return 0;
+    const latest = [...store.maxTests].sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+    return latest.reps;
+  }, [store.maxTests]);
+
   const [effort, setEffort] = useState(5);
+  const [reps, setReps] = useState(currentMax ? Math.round(currentMax * effortToPct(5)) : 10);
   const [notes, setNotes] = useState("");
-  const [maxReps, setMaxReps] = useState(0);
   const [maxInput, setMaxInput] = useState("");
+  const repsTouched = useRef(false);
+
+  // Auto-update reps when effort or max changes, unless user manually edited reps
+  useEffect(() => {
+    if (currentMax > 0 && !repsTouched.current) {
+      setReps(Math.max(1, Math.round(currentMax * effortToPct(effort))));
+    }
+  }, [effort, currentMax]);
 
   const todaySets = store.pushups.filter((p) => p.date === t).sort((a, b) => a.setNumber - b.setNumber);
   const totalReps = todaySets.reduce((a, b) => a + b.reps, 0);
@@ -29,6 +46,7 @@ export default function Pushups() {
       pushups: [...s.pushups, { id: uid(), date: t, setNumber: todaySets.length + 1, reps, effort, notes }],
     }));
     setNotes("");
+    repsTouched.current = false;
     toast.success(`Set ${todaySets.length + 1}: ${reps} reps`);
   };
 
@@ -37,13 +55,13 @@ export default function Pushups() {
     set((s) => ({ ...s, pushups: s.pushups.filter((p) => p.id !== id) }));
   };
 
-  const logMax = () => {
+  const setMax = () => {
     const n = parseInt(maxInput, 10);
     if (!n || n <= 0) return;
     set((s) => ({ ...s, maxTests: [...s.maxTests, { id: uid(), date: t, reps: n }] }));
-    setMaxReps(n);
     setMaxInput("");
-    toast.success(`Max test logged: ${n}`);
+    repsTouched.current = false;
+    toast.success(`Current max set to ${n}`);
   };
 
   return (
