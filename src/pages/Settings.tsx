@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { saveStore, loadStore } from "@/lib/store";
+import { saveStore, loadStore, DEFAULT_ZARYADKA_EXERCISES } from "@/lib/store";
 import { toast } from "sonner";
 
 export default function Settings() {
