@@ -88,11 +88,13 @@ export default function Pushups() {
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
             <label className="block text-xs text-muted-foreground mb-1">Reps</label>
-            <input type="number" min={1} value={reps} onChange={(e) => setReps(+e.target.value)} className="w-full px-3 py-2 border border-input rounded text-sm bg-background" />
+            <input type="number" min={1} value={reps} onChange={(e) => { repsTouched.current = true; setReps(+e.target.value); }} className="w-full px-3 py-2 border border-input rounded text-sm bg-background" />
           </div>
           <div>
-            <label className="block text-xs text-muted-foreground mb-1">Effort {effort}/10</label>
-            <input type="range" min={1} max={10} value={effort} onChange={(e) => setEffort(+e.target.value)} className="w-full mt-2.5 accent-primary" />
+            <label className="block text-xs text-muted-foreground mb-1">
+              Effort {effort}/10 {currentMax > 0 && <span className="text-muted-foreground/70">· {Math.round(effortToPct(effort) * 100)}% of {currentMax}</span>}
+            </label>
+            <input type="range" min={1} max={10} value={effort} onChange={(e) => { repsTouched.current = false; setEffort(+e.target.value); }} className="w-full mt-2.5 accent-primary" />
           </div>
         </div>
         <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes (optional)" className="w-full px-3 py-2 border border-input rounded text-sm bg-background mb-3" />
