@@ -51,7 +51,7 @@ export default function Zaryadka() {
     const target = Math.max(1, newTarget);
     set((s) => ({
       ...s,
-      zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), { name, targetSets: target }],
+      zaryadkaExercises: [...(s.zaryadkaExercises ?? DEFAULT_ZARYADKA_EXERCISES), { name, targetSets: target, maxReps: 0 }],
     }));
     setNewExercise("");
     setNewTarget(1);
