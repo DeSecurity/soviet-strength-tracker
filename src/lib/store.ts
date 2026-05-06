@@ -1,5 +1,6 @@
 // Local-storage backed data layer for the tracker.
 const KEY = "soviet-strength-data-v1";
+const MIGRATION_KEY = "soviet-strength-migrations";
 
 export type DietEntry = {
   id: string;
