@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 export default defineConfig({
-  base: "/blank/",
+  base: process.env.GITHUB_PAGES === "true" ? "/soviet-strength-tracker/" : "/blank/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
